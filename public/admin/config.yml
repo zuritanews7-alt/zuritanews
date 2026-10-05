@@ -1,0 +1,36 @@
+backend:
+  name: github
+  repo: zuritanews7-alt/zuritanews
+  branch: main
+  base_url: https://zuritanews-oauth.zuritanews7.workers.dev
+  auth_endpoint: auth
+
+media_folder: "public/imagenes"
+public_folder: "/imagenes"
+
+locale: es
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    label_singular: "Noticia"
+    folder: "src/content/noticias"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime" }
+      - label: "Categoría"
+        name: "categoria"
+        widget: "select"
+        options:
+          - { label: "Regionales", value: "regionales" }
+          - { label: "Nacionales", value: "nacionales" }
+          - { label: "Sucesos", value: "sucesos" }
+          - { label: "Internacionales", value: "internacionales" }
+          - { label: "Deportes", value: "deportes" }
+          - { label: "Comunidades", value: "comunidades" }
+      - { label: "Autor", name: "autor", widget: "string", default: "Redacción ZURITANEWS" }
+      - { label: "Imagen principal", name: "imagen", widget: "image" }
+      - { label: "Resumen", name: "resumen", widget: "text" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
