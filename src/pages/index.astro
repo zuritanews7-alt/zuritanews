@@ -1,11 +1,185 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const noticias = [
+  {
+    id: 1,
+    titulo: 'Cierran colegios electorales y empieza conteo en Brasil',
+    categoria: 'internacionales',
+    fecha: '04 Oct 2026',
+    imagen: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=500&fit=crop',
+    resumen: 'Los dos favoritos para estas presidenciales son el presidente Luiz Inácio Lula da Silva y el senador Flávio Bolsonaro.'
+  },
+  {
+    id: 2,
+    titulo: 'Policía Federal de Brasil detiene a 28 personas por delitos electorales',
+    categoria: 'internacionales',
+    fecha: '04 Oct 2026',
+    imagen: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=500&fit=crop',
+    resumen: 'Las autoridades investigan propaganda irregular, corrupción electoral y presunta compra de votos en varios estados.'
+  },
+  {
+    id: 3,
+    titulo: 'Denuncian situación irregular entre policías de Anzoátegui y choferes',
+    categoria: 'regionales',
+    fecha: '04 Oct 2026',
+    imagen: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&h=500&fit=crop',
+    resumen: 'Los choferes denuncian que los funcionarios los persiguen y les atraviesan las unidades policiales.'
+  },
+  {
+    id: 4,
+    titulo: 'Vecinos de José Antonio Páez se mantienen en protesta pasiva',
+    categoria: 'comunidades',
+    fecha: '04 Oct 2026',
+    imagen: 'https://images.unsplash.com/photo-1591122290684-25d60efcd01e?w=800&h=500&fit=crop',
+    resumen: 'Exigen respuesta de las autoridades ante la falta de servicios básicos en el sector.'
+  }
+];
+
+const categorias = [
+  { id: 'noticias', icon: '📺', nombre: 'Noticias', count: 10 },
+  { id: 'deportes', icon: '⚽', nombre: 'Deportes', count: 3 },
+  { id: 'musica', icon: '🎵', nombre: 'Música', count: 4 },
+  { id: 'peliculas', icon: '🎬', nombre: 'Películas', count: 2 }
+];
 ---
 
 <Layout>
-	<Welcome />
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-info">
+        <span class="dot"></span>
+        <span><b>EN VIVO</b> · Cobertura 24/7</span>
+        <span>Caracas, VE</span>
+      </div>
+      <div class="topbar-social">
+        <a href="https://wa.me/584249090007" target="_blank" title="WhatsApp">📱</a>
+        <a href="https://t.me/+584249090007" target="_blank" title="Telegram">✈️</a>
+        <a href="#" title="X">𝕏</a>
+        <a href="#" title="Instagram">📷</a>
+        <a href="#" title="YouTube">▶️</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">
+        <span class="z-box">Z</span>
+        <span>URITA<span class="news-tag">NEWS</span></span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Inicio</a>
+        <a href="/regionales">Regionales</a>
+        <a href="/nacionales">Nacionales</a>
+        <a href="/sucesos">Sucesos</a>
+        <a href="/internacionales">Internacionales</a>
+        <a href="/deportes">Deportes</a>
+        <a href="/comunidades">Comunidades</a>
+        <a class="live-link" href="#live">🔴 EN VIVO</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item">Última hora: Sigue la cobertura informativa 24/7 en ZuritaNews</span>
+      <span class="ticker-item">Canales en vivo disponibles las 24 horas del día</span>
+      <span class="ticker-item">Música continua sin interrupciones en ZuritaNews Radio</span>
+      <span class="ticker-item">Síguenos en nuestras redes sociales para más información</span>
+      <span class="ticker-item">Última hora: Sigue la cobertura informativa 24/7 en ZuritaNews</span>
+      <span class="ticker-item">Canales en vivo disponibles las 24 horas del día</span>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="container">
+
+      <section class="live-section">
+        <div class="live-header">
+          <span class="live-badge"><span class="live-dot"></span>En Vivo</span>
+          <h2>ZuritaNews · Centro Multimedia</h2>
+        </div>
+        <div class="zn-cat-grid">
+          {categorias.map(cat => (
+            <div class="zn-cat-card">
+              <span class="zn-cat-icon">{cat.icon}</span>
+              <div class="zn-cat-name">{cat.nombre}</div>
+              <div class="zn-cat-count"><strong>{cat.count}</strong> canales</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div class="layout">
+        <div id="posts-container">
+          <div class="section-head">
+            <h2>Últimas noticias</h2>
+          </div>
+          <div id="zn-posts-list">
+            {noticias.map(nota => (
+              <article class="nota">
+                <a class="nota-link" href={`/nota/${nota.id}`}>
+                  <div class="nota-img">
+                    <img src={nota.imagen} alt={nota.titulo} loading="lazy" />
+                  </div>
+                  <div class="nota-info">
+                    <span class="nota-cat">{nota.categoria.toUpperCase()}</span>
+                    <time class="nota-fecha">📅 {nota.fecha}</time>
+                    <h3>{nota.titulo}</h3>
+                    <p>{nota.resumen}</p>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="widget">
+            <div class="widget-head">📢 El Rincón de las Noticias</div>
+            <div class="widget-body">
+              <div class="rincon-msg">
+                <div class="rincon-text">"Buenos días, ZuritaNews. Quiero denunciar que sigue el problema con los constantes bajones eléctricos en la ciudad."</div>
+                <div class="rincon-autor">Andreina Bolívar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="widget-head">⏳ Cuenta Regresiva 2027</div>
+            <div class="widget-body">
+              <div class="cd-title">Faltan para el 1 de enero de 2027</div>
+              <div class="countdown">
+                <div class="cd-item"><div class="cd-num">88</div><div class="cd-label">Días</div></div>
+                <div class="cd-item"><div class="cd-num">05</div><div class="cd-label">Horas</div></div>
+                <div class="cd-item"><div class="cd-num">45</div><div class="cd-label">Minutos</div></div>
+                <div class="cd-item"><div class="cd-num">30</div><div class="cd-label">Segundos</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="widget-head">🌤 Clima en Venezuela</div>
+            <div class="widget-body">
+              <div class="zn-weather-inner">
+                <div class="zn-weather-icon">⛅</div>
+                <div class="zn-weather-temp">21°C</div>
+                <div class="zn-weather-desc">Parcialmente nublado</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        © 2026 ZuritaNews — Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
 </Layout>
