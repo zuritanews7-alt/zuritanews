@@ -555,4 +555,170 @@ ul { list-style: none; }
   .logo .z-box { width: 32px; height: 32px; font-size: 18px; }
   .zn-cat-grid { grid-template-columns: repeat(2, 1fr); }
   .live-section { padding: 20px; }
+}/* ==================== NOTA INDIVIDUAL ==================== */
+.nota-full {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 40px;
+  margin: 24px 0;
+}
+
+.nota-full h1 {
+  font-family: var(--font-display);
+  font-size: 38px;
+  line-height: 1.15;
+  color: var(--text);
+  margin: 12px 0 16px;
+  font-weight: 400;
+}
+
+.nota-full .modal-fecha {
+  color: var(--text-3);
+  font-size: 14px;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-body {
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--text-2);
+}
+
+.post-body p {
+  margin-bottom: 18px;
+}
+
+.post-body img {
+  border-radius: 8px;
+  margin: 24px 0;
+  width: 100%;
+  height: auto;
+}
+
+.post-body h2,
+.post-body h3 {
+  font-family: var(--font-display);
+  color: var(--text);
+  margin: 26px 0 12px;
+  font-weight: 400;
+}
+
+.post-body h3 {
+  font-size: 22px;
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+
+.post-body blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  font-style: italic;
+  color: var(--text);
+}
+
+.post-body strong {
+  color: var(--text);
+}
+
+.post-body ul,
+.post-body ol {
+  margin: 0 0 18px 24px;
+  color: var(--text-2);
+}
+
+.post-body li {
+  margin-bottom: 8px;
+}
+
+/* Firma de la nota */
+.nota-firma {
+  background: linear-gradient(135deg, rgba(0, 168, 232, 0.08), rgba(255, 140, 26, 0.08));
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 32px 0 24px;
+  color: var(--text-2);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.nota-firma strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.nota-firma a {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.nota-firma .firma-cierre {
+  color: var(--accent);
+  font-weight: 700;
+  display: block;
+  margin-top: 10px;
+}
+
+.nota-firma .firma-line {
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  opacity: 0.5;
+  margin: 14px 0;
+  border: none;
+  border-radius: 2px;
+}
+
+/* Botones de compartir */
+.post-share {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 32px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.post-share a {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.post-share a:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.volver {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .nota-full {
+    padding: 24px;
+  }
+  .nota-full h1 {
+    font-size: 26px;
+  }
+  .post-body {
+    font-size: 16px;
+  }
 }

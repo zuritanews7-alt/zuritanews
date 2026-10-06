@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notas = await getCollection('noticias');
+  return notas.map(nota => ({
+    params: { slug: nota.id },
+    props: { nota },
+  }));
+}
+
+const { nota } = Astro.props;
+const { Content } = await render(nota);
+
+const fecha = nota.data.date.toLocaleDateString('es-VE', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+});
+
+const imagen = nota.data.imagen || 'https://via.placeholder.com/1200x600/1A2A45/00A8E8?text=ZuritaNews';
+---
+
+<Layout title={`${nota.data.title} — ZuritaNews`}>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-info">
+        <span class="dot"></span>
+        <span><b>EN VIVO</b> · Cobertura 24/7</span>
+        <span>Caracas, VE</span>
+      </div>
+      <div class="topbar-social">
+        <a href="https://wa.me/584249090007" target="_blank" title="WhatsApp">📱</a>
+        <a href="https://t.me/+584249090007" target="_blank" title="Telegram">✈️</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">
+        <span class="z-box">Z</span>
+        <span>URITA<span class="news-tag">NEWS</span></span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Inicio</a>
+        <a href="/regionales">Regionales</a>
+        <a href="/nacionales">Nacionales</a>
+        <a href="/sucesos">Sucesos</a>
+        <a href="/internacionales">Internacionales</a>
+        <a href="/deportes">Deportes</a>
+        <a href="/comunidades">Comunidades</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <article class="nota-full">
+        <span class="nota-cat">{nota.data.categoria.toUpperCase()}</span>
+        <h1>{nota.data.title}</h1>
+        <div class="modal-fecha">📅 {fecha} · Por: {nota.data.autor}</div>
+
+        <div class="post-body">
+          <img src={imagen} alt={nota.data.title} />
+          <Content />
+        </div>
+
+        <div class="nota-firma">
+          <strong>📢 ¿Tienes información o una denuncia?</strong>
+          📱 Escríbenos: <a href="https://wa.me/584249090007" target="_blank" rel="noopener">+58 424-9090007</a><br/>
+          Tu denuncia puede ser noticia.
+          <span class="firma-cierre">🌐 ZuritaNews — La señal que no se apaga</span>
+          <hr class="firma-line"/>
+          © 2026 <a href="/">ZuritaNews</a> — Todos los derechos reservados<br/>
+          Prohibida su reproducción total o parcial sin autorización
+        </div>
+
+        <div class="post-share">
+          <a href={`https://wa.me/?text=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">📱 WhatsApp</a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">𝕏 Compartir</a>
+          <a href={`https://t.me/share/url?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">✈️ Telegram</a>
+        </div>
+
+        <a class="volver" href="/">← Volver al inicio</a>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        © 2026 ZuritaNews — Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+</Layout>
