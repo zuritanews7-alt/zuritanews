@@ -2,14 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-// Leer notas de la carpeta content/noticias
 const notasCMS = await getCollection('noticias');
 
-// Convertir al formato que usa la plantilla
 const noticias = notasCMS
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .map(nota => ({
-    id: nota.slug,
+    id: nota.id.replace(/\.md$/, ''),
     titulo: nota.data.title,
     categoria: nota.data.categoria,
     fecha: nota.data.date.toLocaleDateString('es-VE', {
@@ -104,7 +102,7 @@ const categorias = [
           <div id="zn-posts-list">
             {noticias.length === 0 ? (
               <p style="color:#8B9AAD;padding:40px;text-align:center;">
-                No hay notas publicadas todavía. Ve al <a href="/admin/">panel de administración</a> para crear la primera.
+                No hay notas publicadas todavía.
               </p>
             ) : (
               noticias.map(nota => (

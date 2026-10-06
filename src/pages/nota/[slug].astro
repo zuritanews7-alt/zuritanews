@@ -5,7 +5,7 @@ import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const notas = await getCollection('noticias');
   return notas.map(nota => ({
-    params: { slug: nota.id },
+    params: { slug: nota.id.replace(/\.md$/, '') },
     props: { nota },
   }));
 }
@@ -79,9 +79,9 @@ const imagen = nota.data.imagen || 'https://via.placeholder.com/1200x600/1A2A45/
         </div>
 
         <div class="post-share">
-          <a href={`https://wa.me/?text=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">📱 WhatsApp</a>
-          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">𝕏 Compartir</a>
-          <a href={`https://t.me/share/url?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id)}`} target="_blank" rel="noopener">✈️ Telegram</a>
+          <a href={`https://wa.me/?text=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id.replace(/\.md$/, ''))}`} target="_blank" rel="noopener">📱 WhatsApp</a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id.replace(/\.md$/, ''))}`} target="_blank" rel="noopener">𝕏 Compartir</a>
+          <a href={`https://t.me/share/url?url=${encodeURIComponent('https://zuritanews.pages.dev/nota/' + nota.id.replace(/\.md$/, ''))}`} target="_blank" rel="noopener">✈️ Telegram</a>
         </div>
 
         <a class="volver" href="/">← Volver al inicio</a>

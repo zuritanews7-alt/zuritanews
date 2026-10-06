@@ -16,7 +16,7 @@ const notasFiltradas = todasLasNotas
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const noticias = notasFiltradas.map(nota => ({
-  id: nota.id,
+  id: nota.id.replace(/\.md$/, ''),
   titulo: nota.data.title,
   categoria: nota.data.categoria,
   fecha: nota.data.date.toLocaleDateString('es-VE', {
