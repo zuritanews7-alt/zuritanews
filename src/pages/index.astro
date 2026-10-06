@@ -1,40 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-const noticias = [
-  {
-    id: 1,
-    titulo: 'Cierran colegios electorales y empieza conteo en Brasil',
-    categoria: 'internacionales',
-    fecha: '04 Oct 2026',
-    imagen: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=500&fit=crop',
-    resumen: 'Los dos favoritos para estas presidenciales son el presidente Luiz Inácio Lula da Silva y el senador Flávio Bolsonaro.'
-  },
-  {
-    id: 2,
-    titulo: 'Policía Federal de Brasil detiene a 28 personas por delitos electorales',
-    categoria: 'internacionales',
-    fecha: '04 Oct 2026',
-    imagen: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=500&fit=crop',
-    resumen: 'Las autoridades investigan propaganda irregular, corrupción electoral y presunta compra de votos en varios estados.'
-  },
-  {
-    id: 3,
-    titulo: 'Denuncian situación irregular entre policías de Anzoátegui y choferes',
-    categoria: 'regionales',
-    fecha: '04 Oct 2026',
-    imagen: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&h=500&fit=crop',
-    resumen: 'Los choferes denuncian que los funcionarios los persiguen y les atraviesan las unidades policiales.'
-  },
-  {
-    id: 4,
-    titulo: 'Vecinos de José Antonio Páez se mantienen en protesta pasiva',
-    categoria: 'comunidades',
-    fecha: '04 Oct 2026',
-    imagen: 'https://images.unsplash.com/photo-1591122290684-25d60efcd01e?w=800&h=500&fit=crop',
-    resumen: 'Exigen respuesta de las autoridades ante la falta de servicios básicos en el sector.'
-  }
-];
+// Leer notas de la carpeta content/noticias
+const notasCMS = await getCollection('noticias');
+
+// Convertir al formato que usa la plantilla
+const noticias = notasCMS
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map(nota => ({
+    id: nota.slug,
+    titulo: nota.data.title,
+    categoria: nota.data.categoria,
+    fecha: nota.data.date.toLocaleDateString('es-VE', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }),
+    imagen: nota.data.imagen || 'https://via.placeholder.com/800x500/1A2A45/00A8E8?text=ZuritaNews',
+    resumen: nota.data.resumen,
+  }));
 
 const categorias = [
   { id: 'noticias', icon: '📺', nombre: 'Noticias', count: 10 },
@@ -117,21 +102,27 @@ const categorias = [
             <h2>Últimas noticias</h2>
           </div>
           <div id="zn-posts-list">
-            {noticias.map(nota => (
-              <article class="nota">
-                <a class="nota-link" href={`/nota/${nota.id}`}>
-                  <div class="nota-img">
-                    <img src={nota.imagen} alt={nota.titulo} loading="lazy" />
-                  </div>
-                  <div class="nota-info">
-                    <span class="nota-cat">{nota.categoria.toUpperCase()}</span>
-                    <time class="nota-fecha">📅 {nota.fecha}</time>
-                    <h3>{nota.titulo}</h3>
-                    <p>{nota.resumen}</p>
-                  </div>
-                </a>
-              </article>
-            ))}
+            {noticias.length === 0 ? (
+              <p style="color:#8B9AAD;padding:40px;text-align:center;">
+                No hay notas publicadas todavía. Ve al <a href="/admin/">panel de administración</a> para crear la primera.
+              </p>
+            ) : (
+              noticias.map(nota => (
+                <article class="nota">
+                  <a class="nota-link" href={`/nota/${nota.id}`}>
+                    <div class="nota-img">
+                      <img src={nota.imagen} alt={nota.titulo} loading="lazy" />
+                    </div>
+                    <div class="nota-info">
+                      <span class="nota-cat">{nota.categoria.toUpperCase()}</span>
+                      <time class="nota-fecha">📅 {nota.fecha}</time>
+                      <h3>{nota.titulo}</h3>
+                      <p>{nota.resumen}</p>
+                    </div>
+                  </a>
+                </article>
+              ))
+            )}
           </div>
         </div>
 
