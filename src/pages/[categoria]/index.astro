@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const categorias = ['regionales', 'nacionales', 'sucesos', 'internacionales', 'deportes', 'comunidades'];
+  return categorias.map(cat => ({
+    params: { categoria: cat },
+  }));
+}
+
+const { categoria } = Astro.params;
+const todasLasNotas = await getCollection('noticias');
+const notasFiltradas = todasLasNotas
+  .filter(nota => nota.data.categoria === categoria)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const noticias = notasFiltradas.map(nota => ({
+  id: nota.id,
+  titulo: nota.data.title,
+  categoria: nota.data.categoria,
+  fecha: nota.data.date.toLocaleDateString('es-VE', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }),
+  imagen: nota.data.imagen || 'https://via.placeholder.com/800x500/1A2A45/00A8E8?text=ZuritaNews',
+  resumen: nota.data.resumen,
+}));
+
+const titulo = categoria.charAt(0).toUpperCase() + categoria.slice(1);
+---
+
+<Layout title={`${titulo} — ZuritaNews`}>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-info">
+        <span class="dot"></span>
+        <span><b>EN VIVO</b> · Cobertura 24/7</span>
+        <span>Caracas, VE</span>
+      </div>
+      <div class="topbar-social">
+        <a href="https://wa.me/584249090007" target="_blank" title="WhatsApp">📱</a>
+        <a href="https://t.me/+584249090007" target="_blank" title="Telegram">✈️</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">
+        <span class="z-box">Z</span>
+        <span>URITA<span class="news-tag">NEWS</span></span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Inicio</a>
+        <a href="/regionales">Regionales</a>
+        <a href="/nacionales">Nacionales</a>
+        <a href="/sucesos">Sucesos</a>
+        <a href="/internacionales">Internacionales</a>
+        <a href="/deportes">Deportes</a>
+        <a href="/comunidades">Comunidades</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="section-head">
+        <h2>Categoría: {titulo}</h2>
+      </div>
+
+      <div id="zn-posts-list">
+        {noticias.length === 0 ? (
+          <p style="color:#8B9AAD;padding:40px;text-align:center;">
+            No hay notas publicadas en esta categoría todavía.
+          </p>
+        ) : (
+          noticias.map(nota => (
+            <article class="nota">
+              <a class="nota-link" href={`/nota/${nota.id}`}>
+                <div class="nota-img">
+                  <img src={nota.imagen} alt={nota.titulo} loading="lazy" />
+                </div>
+                <div class="nota-info">
+                  <span class="nota-cat">{nota.categoria.toUpperCase()}</span>
+                  <time class="nota-fecha">📅 {nota.fecha}</time>
+                  <h3>{nota.titulo}</h3>
+                  <p>{nota.resumen}</p>
+                </div>
+              </a>
+            </article>
+          ))
+        )}
+      </div>
+
+      <div style="text-align:center;margin-top:40px;">
+        <a class="volver" href="/">← Volver al inicio</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        © 2026 ZuritaNews — Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+</Layout>
