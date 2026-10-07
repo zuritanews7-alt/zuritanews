@@ -1,0 +1,451 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const canalesNoticias = [
+  // ========== 🇻🇪 VENEZUELA ==========
+  {
+    id: 'vtv',
+    nombre: 'VTV · Venezolana de Televisión',
+    categoria: 'Venezuela',
+    pais: 'Venezuela',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UC_8sCVycu3FXidPNoZwOHqA&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Venezolana_de_Televisi%C3%B3n_logo.svg/320px-Venezolana_de_Televisi%C3%B3n_logo.svg.png'
+  },
+  {
+    id: 'telesur',
+    nombre: 'TeleSUR',
+    categoria: 'Venezuela',
+    pais: 'Venezuela',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCmuTmpLY35O3csvhyA6vrkg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/TeleSUR_logo.svg/320px-TeleSUR_logo.svg.png'
+  },
+
+  // ========== 🌎 LATINOAMÉRICA ==========
+  {
+    id: 'cnn-espanol',
+    nombre: 'CNN en Español',
+    categoria: 'Latinoamérica',
+    pais: 'EE.UU.',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UC_lEiu6917IJz03TnntWUaQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/CNN.svg/320px-CNN.svg.png'
+  },
+  {
+    id: 'ntn24',
+    nombre: 'NTN24',
+    categoria: 'Latinoamérica',
+    pais: 'Colombia',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCEJs1fTF3K3szRJGxJY14VrA&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/NTN24_logo.png/320px-NTN24_logo.png'
+  },
+  {
+    id: 'meganoticias',
+    nombre: 'Meganoticias',
+    categoria: 'Latinoamérica',
+    pais: 'Chile',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCkccyEbqhhM3uKOI6Shm-4Q&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Meganoticias_logo.png/320px-Meganoticias_logo.png'
+  },
+  {
+    id: 'primer-impacto',
+    nombre: 'Primer Impacto',
+    categoria: 'Latinoamérica',
+    pais: 'EE.UU.',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UC9SUMV0oYm0XK9H-c3GmKaQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Primer_Impacto_logo.png/320px-Primer_Impacto_logo.png'
+  },
+  {
+    id: 'milenio',
+    nombre: 'Milenio',
+    categoria: 'Latinoamérica',
+    pais: 'México',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCfB_AsyE7WQDsB1rM7uEjJQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Milenio_Logo.png/320px-Milenio_Logo.png'
+  },
+  {
+    id: 'tn-argentina',
+    nombre: 'TN · Todo Noticias',
+    categoria: 'Latinoamérica',
+    pais: 'Argentina',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/TN_Logo.png/320px-TN_Logo.png'
+  },
+
+  // ========== 🌍 INTERNACIONAL (INGLÉS) ==========
+  {
+    id: 'aljazeera-en',
+    nombre: 'Al Jazeera English',
+    categoria: 'Internacional',
+    pais: 'Catar',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Al_Jazeera_English_Logo.svg/320px-Al_Jazeera_English_Logo.svg.png'
+  },
+  {
+    id: 'dw-en',
+    nombre: 'DW News',
+    categoria: 'Internacional',
+    pais: 'Alemania',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCknLrEdhRCp1aegoMqRaCZg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Deutsche_Welle_symbol_2012.svg/320px-Deutsche_Welle_symbol_2012.svg.png'
+  },
+  {
+    id: 'france24-en',
+    nombre: 'France 24 English',
+    categoria: 'Internacional',
+    pais: 'Francia',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCQfwfsi5VrQ8yKZ-UWmAEFg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/France_24_logo.svg/320px-France_24_logo.svg.png'
+  },
+  {
+    id: 'sky-news',
+    nombre: 'Sky News',
+    categoria: 'Internacional',
+    pais: 'Reino Unido',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Sky_News_logo.svg/320px-Sky_News_logo.svg.png'
+  },
+  {
+    id: 'bloomberg',
+    nombre: 'Bloomberg TV',
+    categoria: 'Internacional',
+    pais: 'EE.UU.',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCIALMKvObZNtJ6AmdCLP7Lg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Bloomberg_logo.svg/320px-Bloomberg_logo.svg.png'
+  },
+  {
+    id: 'abc-news',
+    nombre: 'ABC News',
+    categoria: 'Internacional',
+    pais: 'EE.UU.',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCBi2mrWuNuyYy4gbM6fU18Q&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ABC_News_Live_logo.svg/320px-ABC_News_Live_logo.svg.png'
+  },
+  {
+    id: 'cna',
+    nombre: 'CNA · Channel News Asia',
+    categoria: 'Internacional',
+    pais: 'Singapur',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UC83jt4dlz1Gjl58fzQrrKZg&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/CNA_logo.svg/320px-CNA_logo.svg.png'
+  },
+  {
+    id: 'reuters',
+    nombre: 'Reuters',
+    categoria: 'Internacional',
+    pais: 'Reino Unido',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UChqUTb7kYRX8-EiaN3XFrSQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Reuters_logo.svg/320px-Reuters_logo.svg.png'
+  },
+
+  // ========== 🇪🇸 ESPAÑA ==========
+  {
+    id: 'rtve',
+    nombre: 'RTVE Noticias',
+    categoria: 'España',
+    pais: 'España',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UC7QZIf0dta-XPXsp9Hv4dTw&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/RTVE_logo.svg/320px-RTVE_logo.svg.png'
+  },
+
+  // ========== 🌐 VERSIÓN ESPAÑOL DE INTERNACIONALES ==========
+  {
+    id: 'dw-espanol',
+    nombre: 'DW Español',
+    categoria: 'Español',
+    pais: 'Alemania',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCQ1GpKa15ulyoQuxz7H4rng&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Deutsche_Welle_symbol_2012.svg/320px-Deutsche_Welle_symbol_2012.svg.png'
+  },
+  {
+    id: 'france24-es',
+    nombre: 'France 24 Español',
+    categoria: 'Español',
+    pais: 'Francia',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCUdOoVWuWmgo1wByzcsyKDQ&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/France_24_logo.svg/320px-France_24_logo.svg.png'
+  },
+  {
+    id: 'rt-espanol',
+    nombre: 'RT Español',
+    categoria: 'Español',
+    pais: 'Rusia',
+    stream: 'https://www.youtube.com/embed/live_stream?channel=UCyoGpKa15ulyoQuxz7H4rng&autoplay=1&mute=0&enablejsapi=1&playsinline=1&modestbranding=1&rel=0',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/RT_logo_2015.svg/320px-RT_logo_2015.svg.png'
+  }
+];
+
+// Agrupar por categoría
+const categorias = ['Venezuela', 'Latinoamérica', 'Español', 'Internacional', 'España'];
+---
+
+<Layout title="Canales en Vivo — ZuritaNews">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-info">
+        <span class="dot"></span>
+        <span><b>EN VIVO</b> · Cobertura 24/7</span>
+        <span>Caracas, VE</span>
+      </div>
+      <div class="topbar-social">
+        <a href="https://wa.me/584249090007" target="_blank" title="WhatsApp">📱</a>
+        <a href="https://t.me/+584249090007" target="_blank" title="Telegram">✈️</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">
+        <span class="z-box">Z</span>
+        <span>URITA<span class="news-tag">NEWS</span></span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Inicio</a>
+        <a href="/regionales">Regionales</a>
+        <a href="/nacionales">Nacionales</a>
+        <a href="/sucesos">Sucesos</a>
+        <a href="/internacionales">Internacionales</a>
+        <a href="/deportes">Deportes</a>
+        <a href="/comunidades">Comunidades</a>
+        <a class="live-link" href="/en-vivo">🔴 EN VIVO</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+
+      <div class="section-head">
+        <h2>📺 Canales de Noticias en Vivo</h2>
+        <span class="section-badge">{canalesNoticias.length} canales</span>
+      </div>
+
+      <p class="section-desc">
+        Señales oficiales de noticias 24/7 de Venezuela y el mundo. Haz clic en cualquier canal para verlo.
+      </p>
+
+      {categorias.map(cat => {
+        const canalesCat = canalesNoticias.filter(c => c.categoria === cat);
+        if (canalesCat.length === 0) return null;
+        return (
+          <div class="categoria-grupo">
+            <h3 class="categoria-titulo">
+              {cat === 'Venezuela' && '🇻🇪 '}
+              {cat === 'Latinoamérica' && '🌎 '}
+              {cat === 'Español' && '🌐 '}
+              {cat === 'Internacional' && '🌍 '}
+              {cat === 'España' && '🇪🇸 '}
+              {cat}
+            </h3>
+            <div class="tv-grid">
+              {canalesCat.map(canal => (
+                <div class="tv-card" data-stream={canal.stream}>
+                  <div class="tv-video-wrap">
+                    <div class="tv-facade">
+                      <img src={canal.logo} alt={canal.nombre} class="tv-logo" />
+                      <button class="tv-play-btn" type="button">▶ Ver en vivo</button>
+                    </div>
+                    <iframe class="tv-player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="display:none;"></iframe>
+                  </div>
+                  <div class="tv-info">
+                    <div class="tv-nombre">{canal.nombre}</div>
+                    <div class="tv-meta">
+                      <span class="tv-pais">{canal.pais}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      <div style="text-align:center;margin-top:40px;">
+        <a class="volver" href="/">← Volver al inicio</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        © 2026 ZuritaNews — Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script is:inline>
+    (function(){
+      function limpiarOtros(iframeActual) {
+        document.querySelectorAll('.tv-player').forEach(function(f){
+          if (f !== iframeActual) {
+            f.src = '';
+            f.style.display = 'none';
+          }
+        });
+        document.querySelectorAll('.tv-card').forEach(function(card){
+          var facade = card.querySelector('.tv-facade');
+          var iframe = card.querySelector('.tv-player');
+          if (iframe !== iframeActual && facade) facade.style.display = 'flex';
+        });
+      }
+
+      function reproducir(card) {
+        var iframe = card.querySelector('.tv-player');
+        var facade = card.querySelector('.tv-facade');
+        var url = card.getAttribute('data-stream');
+
+        limpiarOtros(iframe);
+        facade.style.display = 'none';
+        iframe.style.display = 'block';
+        iframe.src = url;
+      }
+
+      document.querySelectorAll('.tv-play-btn').forEach(function(btn){
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          reproducir(btn.closest('.tv-card'));
+        });
+      });
+    })();
+  </script>
+
+  <style>
+    .section-badge {
+      padding: 6px 12px;
+      background: var(--surface);
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-desc {
+      color: var(--text-3);
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .categoria-grupo {
+      margin-bottom: 40px;
+    }
+
+    .categoria-titulo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .tv-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .tv-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .tv-video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      background: #000;
+    }
+
+    .tv-player {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+
+    .tv-facade {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #0A1220, #1A2A45);
+      z-index: 2;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .tv-logo {
+      max-height: 60px;
+      max-width: 80%;
+      object-fit: contain;
+      filter: brightness(1.2);
+    }
+
+    .tv-play-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 8px 24px rgba(0, 168, 232, 0.4);
+      font-family: var(--font-body);
+    }
+
+    .tv-play-btn:hover {
+      background: linear-gradient(135deg, var(--accent), #E63946);
+    }
+
+    .tv-info { padding: 12px 16px; }
+
+    .tv-nombre {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .tv-meta {
+      display: flex;
+      gap: 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    @media (max-width: 768px) {
+      .tv-grid {
+        grid-template-columns: 1fr;
+      }
+      .categoria-titulo {
+        font-size: 15px;
+      }
+    }
+  </style>
+</Layout>
