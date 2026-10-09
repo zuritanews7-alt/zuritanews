@@ -51,7 +51,7 @@ const categorias = [
         <span class="z-box">Z</span>
         <span>URITA<span class="news-tag">NEWS</span></span>
       </a>
-            <nav class="main-nav">
+      <nav class="main-nav">
         <a href="/">Inicio</a>
         <a href="/regionales">Regionales</a>
         <a href="/nacionales">Nacionales</a>
@@ -126,6 +126,38 @@ const categorias = [
         </div>
 
         <aside class="sidebar">
+
+          <div class="widget">
+            <div class="widget-head">🎙️ ZuritaNews Radio</div>
+            <div class="widget-body">
+              <div class="zn-radio-widget">
+                <select id="zn-widget-station" class="zn-widget-select">
+                  <option value="https://stream.zeno.fm/c3q3w8zfe18uv|Radio Rumbos 670 AM|Variado · Informativo">📻 Radio Rumbos 670 AM</option>
+                  <option value="https://stream.zeno.fm/e2kzfpr34d0uv|Fiesta Latina 106.1 FM|Latino · Variado">📻 Fiesta Latina 106.1 FM</option>
+                  <option value="http://acp4.lorini.net:15022/stream|Líder 92.3 FM · Mérida|Entretenimiento · Hits">📻 Líder 92.3 FM · Mérida</option>
+                  <option value="http://acp4.lorini.net:15020/stream|Líder 94.9 FM · Caracas|Noticias · Deportes">📻 Líder 94.9 FM · Caracas</option>
+                  <option value="https://stream.zeno.fm/dpndnvw6hwzuv|Rumba Venezuela FM|Rumba · Tropical">📻 Rumba Venezuela FM</option>
+                  <option value="https://stream.zeno.fm/h7lnwv51bh5uv|La Salsera FM|Salsa · Latina">📻 La Salsera FM</option>
+                  <option value="https://stream.zeno.fm/z07vyxbqz8quv|Clásicos del Vallenato|Vallenato">📻 Clásicos del Vallenato</option>
+                </select>
+                <div class="zn-widget-now">
+                  <span class="zn-widget-eq" id="zn-widget-eq">
+                    <span></span><span></span><span></span><span></span>
+                  </span>
+                  <div class="zn-widget-info">
+                    <strong id="zn-widget-name">Selecciona una emisora</strong>
+                    <small id="zn-widget-genre">Haz clic en ▶</small>
+                  </div>
+                </div>
+                <div class="zn-widget-controls">
+                  <button id="zn-widget-play" class="zn-widget-play" type="button">▶</button>
+                  <input id="zn-widget-volume" type="range" min="0" max="100" value="80" class="zn-widget-volume" aria-label="Volumen"/>
+                </div>
+                <a href="/radio" class="zn-widget-more">Ver todas las emisoras →</a>
+              </div>
+            </div>
+          </div>
+
           <div class="widget">
             <div class="widget-head">📢 El Rincón de las Noticias</div>
             <div class="widget-body">
@@ -141,22 +173,18 @@ const categorias = [
             <div class="widget-body">
               <div class="cd-title">Faltan para el 1 de enero de 2027</div>
               <div class="countdown">
-                <div class="cd-item"><div class="cd-num">88</div><div class="cd-label">Días</div></div>
-                <div class="cd-item"><div class="cd-num">05</div><div class="cd-label">Horas</div></div>
-                <div class="cd-item"><div class="cd-num">45</div><div class="cd-label">Minutos</div></div>
-                <div class="cd-item"><div class="cd-num">30</div><div class="cd-label">Segundos</div></div>
+                <div class="cd-item"><div class="cd-num" id="cd-dias">--</div><div class="cd-label">Días</div></div>
+                <div class="cd-item"><div class="cd-num" id="cd-horas">--</div><div class="cd-label">Horas</div></div>
+                <div class="cd-item"><div class="cd-num" id="cd-min">--</div><div class="cd-label">Minutos</div></div>
+                <div class="cd-item"><div class="cd-num" id="cd-seg">--</div><div class="cd-label">Segundos</div></div>
               </div>
             </div>
           </div>
 
           <div class="widget">
-            <div class="widget-head">🌤 Clima en Venezuela</div>
+            <div class="widget-head">🌤 Clima en Ciudad Bolívar</div>
             <div class="widget-body">
-              <div class="zn-weather-inner">
-                <div class="zn-weather-icon">⛅</div>
-                <div class="zn-weather-temp">21°C</div>
-                <div class="zn-weather-desc">Parcialmente nublado</div>
-              </div>
+              <div class="zn-weather-loading" id="zn-weather">Cargando clima...</div>
             </div>
           </div>
         </aside>
@@ -172,4 +200,357 @@ const categorias = [
       </div>
     </div>
   </footer>
+
+  <script is:inline>
+    // ==================== CUENTA REGRESIVA ====================
+    (function(){
+      var TARGET = new Date('2027-01-01T00:00:00-04:00').getTime();
+      function tick(){
+        var diff = Math.max(0, TARGET - new Date().getTime());
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        var eD = document.getElementById('cd-dias'),
+            eH = document.getElementById('cd-horas'),
+            eM = document.getElementById('cd-min'),
+            eS = document.getElementById('cd-seg');
+        if(eD) eD.textContent = d;
+        if(eH) eH.textContent = String(h).padStart(2,'0');
+        if(eM) eM.textContent = String(m).padStart(2,'0');
+        if(eS) eS.textContent = String(s).padStart(2,'0');
+      }
+      tick(); setInterval(tick, 1000);
+    })();
+
+    // ==================== CLIMA DINÁMICO ====================
+    (function(){
+      var cont = document.getElementById('zn-weather');
+      if(!cont) return;
+
+      function traducirClima(code){
+        var map = {
+          0:{d:'Despejado',i:'☀️'},
+          1:{d:'Mayormente despejado',i:'🌤️'},
+          2:{d:'Parcialmente nublado',i:'⛅'},
+          3:{d:'Nublado',i:'☁️'},
+          45:{d:'Niebla',i:'🌫️'},
+          48:{d:'Niebla helada',i:'🌫️'},
+          51:{d:'Llovizna ligera',i:'🌦️'},
+          53:{d:'Llovizna',i:'🌦️'},
+          55:{d:'Llovizna intensa',i:'🌧️'},
+          61:{d:'Lluvia ligera',i:'🌦️'},
+          63:{d:'Lluvia',i:'🌧️'},
+          65:{d:'Lluvia intensa',i:'🌧️'},
+          80:{d:'Chubascos',i:'🌦️'},
+          81:{d:'Chubascos fuertes',i:'🌧️'},
+          82:{d:'Chubascos violentos',i:'⛈️'},
+          95:{d:'Tormenta eléctrica',i:'⛈️'},
+          96:{d:'Tormenta con granizo',i:'⛈️'},
+          99:{d:'Tormenta fuerte',i:'⛈️'}
+        };
+        return map[code] || {d:'Clima variable',i:'🌡️'};
+      }
+
+      function cargarClima(){
+        // Ciudad Bolívar, Venezuela
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=8.12&longitude=-63.55&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m&timezone=America/Caracas';
+
+        fetch(url)
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            var c = data.current;
+            var cl = traducirClima(c.weather_code);
+            var t = Math.round(c.temperature_2m);
+            var s = Math.round(c.apparent_temperature);
+
+            cont.classList.remove('zn-weather-loading');
+            cont.innerHTML =
+              '<div class="zn-weather-inner">' +
+                '<div class="zn-weather-icon">' + cl.i + '</div>' +
+                '<div class="zn-weather-temp">' + t + '°C</div>' +
+                '<div class="zn-weather-desc">' + cl.d + '</div>' +
+                '<div class="zn-weather-extra">' +
+                  '<div class="zn-weather-extra-item"><strong>' + s + '°C</strong>Sensación</div>' +
+                  '<div class="zn-weather-extra-item"><strong>' + c.relative_humidity_2m + '%</strong>Humedad</div>' +
+                  '<div class="zn-weather-extra-item"><strong>' + Math.round(c.wind_speed_10m) + ' km/h</strong>Viento</div>' +
+                  '<div class="zn-weather-extra-item"><strong>VE</strong>Venezuela</div>' +
+                '</div>' +
+              '</div>';
+          })
+          .catch(function(){
+            cont.innerHTML = '<div class="zn-weather-loading">No se pudo cargar el clima.</div>';
+          });
+      }
+
+      cargarClima();
+      // Actualizar cada 15 minutos
+      setInterval(cargarClima, 900000);
+    })();
+
+    // ==================== WIDGET RADIO ====================
+    (function(){
+      var audio = new Audio();
+      var playBtn = document.getElementById('zn-widget-play');
+      var volumeInput = document.getElementById('zn-widget-volume');
+      var select = document.getElementById('zn-widget-station');
+      var nombreEl = document.getElementById('zn-widget-name');
+      var genreEl = document.getElementById('zn-widget-genre');
+      var eqEl = document.getElementById('zn-widget-eq');
+
+      if (!playBtn || !select) return;
+
+      audio.volume = 0.8;
+
+      function actualizarEstado(playing) {
+        if (playing) {
+          eqEl.classList.add('active');
+          playBtn.textContent = '⏸';
+        } else {
+          eqEl.classList.remove('active');
+          playBtn.textContent = '▶';
+        }
+      }
+
+      function tocarEmisora(value) {
+        var partes = value.split('|');
+        if (partes.length < 3) return;
+        var url = partes[0];
+        var nombre = partes[1];
+        var genero = partes[2];
+
+        if (audio.src === url && !audio.paused) {
+          audio.pause();
+          actualizarEstado(false);
+          return;
+        }
+
+        nombreEl.textContent = nombre;
+        genreEl.textContent = genero;
+        audio.src = url;
+        audio.load();
+        audio.play().then(function(){
+          actualizarEstado(true);
+        }).catch(function(){
+          nombreEl.textContent = 'Error al reproducir';
+          genreEl.textContent = 'Prueba con otra';
+          actualizarEstado(false);
+        });
+      }
+
+      playBtn.addEventListener('click', function(){
+        var val = select.value;
+        if (!val) return;
+
+        if (audio.src && audio.src !== '') {
+          if (audio.paused) {
+            audio.play().then(function(){ actualizarEstado(true); });
+          } else {
+            audio.pause();
+            actualizarEstado(false);
+          }
+        } else {
+          tocarEmisora(val);
+        }
+      });
+
+      select.addEventListener('change', function(){
+        tocarEmisora(this.value);
+      });
+
+      volumeInput.addEventListener('input', function(){
+        audio.volume = this.value / 100;
+      });
+
+      audio.addEventListener('error', function(){
+        nombreEl.textContent = 'Canal no disponible';
+        genreEl.textContent = 'Prueba con otra';
+        actualizarEstado(false);
+      });
+
+      select.selectedIndex = 0;
+    })();
+  </script>
+
+  <style>
+    /* ============ WIDGET RADIO ============ */
+    .zn-radio-widget {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .zn-widget-select {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+      width: 100%;
+    }
+
+    .zn-widget-select:focus {
+      border-color: var(--primary);
+    }
+
+    .zn-widget-now {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .zn-widget-eq {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 22px;
+      width: 22px;
+      flex-shrink: 0;
+    }
+
+    .zn-widget-eq span {
+      display: block;
+      width: 3px;
+      background: #00A8E8;
+      border-radius: 2px;
+      height: 30%;
+    }
+
+    .zn-widget-eq.active span {
+      animation: zn-widget-eq 0.8s ease-in-out infinite;
+      background: linear-gradient(180deg, #FF8C1A, #E63946);
+    }
+
+    .zn-widget-eq.active span:nth-child(2) { animation-delay: 0.15s; }
+    .zn-widget-eq.active span:nth-child(3) { animation-delay: 0.3s; }
+    .zn-widget-eq.active span:nth-child(4) { animation-delay: 0.1s; }
+
+    @keyframes zn-widget-eq {
+      0%, 100% { height: 25%; }
+      50% { height: 100%; }
+    }
+
+    .zn-widget-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .zn-widget-info strong {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .zn-widget-info small {
+      color: var(--text-3);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .zn-widget-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .zn-widget-play {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .zn-widget-play:hover {
+      transform: scale(1.08);
+    }
+
+    .zn-widget-volume {
+      flex: 1;
+      accent-color: var(--primary);
+      height: 4px;
+    }
+
+    .zn-widget-more {
+      display: block;
+      text-align: center;
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border);
+    }
+
+    .zn-widget-more:hover {
+      color: var(--accent);
+    }
+
+    /* ============ CLIMA DINÁMICO ============ */
+    .zn-weather-inner { text-align: center; }
+    .zn-weather-icon {
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .zn-weather-temp {
+      font-family: var(--font-display);
+      font-size: 44px;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .zn-weather-desc {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-bottom: 12px;
+      text-transform: capitalize;
+    }
+    .zn-weather-extra {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 8px;
+    }
+    .zn-weather-extra-item {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-3);
+      text-transform: uppercase;
+    }
+    .zn-weather-extra-item strong {
+      display: block;
+      font-size: 15px;
+      color: var(--primary);
+      font-family: var(--font-display);
+      margin-bottom: 2px;
+    }
+    .zn-weather-loading {
+      color: var(--text-3);
+      text-align: center;
+      font-size: 13px;
+      padding: 20px;
+    }
+  </style>
 </Layout>
